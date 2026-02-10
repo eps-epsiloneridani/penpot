@@ -1247,9 +1247,8 @@
                           (some? new-modif)
                           (assoc (:id frame) {:modifiers new-modif})))))
                   {}))]
-
         (if (features/active-feature? state "render-wasm/v1")
-          (rx/of (dwm/apply-wasm-modifiers modifiers {:undo-group undo-group}))
+          (rx/of (dwm/apply-wasm-modifiers modifiers {:undo-group undo-group :propagate? false}))
           (rx/of (dwm/apply-modifiers {:modifiers modifiers :undo-group undo-group})))))))
 
 (defn resize-text-editor

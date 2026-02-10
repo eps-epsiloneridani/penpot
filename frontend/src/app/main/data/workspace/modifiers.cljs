@@ -631,7 +631,7 @@
         (let [structure-entries (parse-structure-modifiers modif-tree)]
           (wasm.api/set-structure-modifiers structure-entries)
           (let [geometry-entries (parse-geometry-modifiers modif-tree)
-                modifiers        (wasm.api/propagate-modifiers geometry-entries pixel-precision)]
+                modifiers        (wasm.api/propagate-modifiers geometry-entries pixel-precision true)]
             (wasm.api/set-modifiers modifiers)
             (let [ids     (into [] xf:map-key geometry-entries)
                   selrect (wasm.api/get-selection-rect ids)]
@@ -663,8 +663,8 @@
 
 #_:clj-kondo/ignore
 (defn apply-wasm-modifiers
-  [modif-tree & {:keys [ignore-constraints ignore-snap-pixel snap-ignore-axis undo-transation?]
-                 :or {ignore-constraints false ignore-snap-pixel false snap-ignore-axis nil undo-transation? true}
+  [modif-tree & {:keys [ignore-constraints ignore-snap-pixel snap-ignore-axis undo-transation? propagate?]
+                 :or {ignore-constraints false ignore-snap-pixel false snap-ignore-axis nil undo-transation? true propagate? true}
                  :as params}]
   (ptk/reify ::apply-wasm-modifiesr
     ptk/WatchEvent
@@ -682,7 +682,7 @@
             (and (not ignore-snap-pixel) (contains? (:workspace-layout state) :snap-pixel-grid))
 
             transforms
-            (into {} (wasm.api/propagate-modifiers geometry-entries snap-pixel?))
+            (into {} (wasm.api/propagate-modifiers geometry-entries snap-pixel? propagate?))
 
             ignore-tree
             (calculate-ignore-tree-wasm transforms objects)

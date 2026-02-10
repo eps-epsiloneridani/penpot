@@ -702,13 +702,17 @@ pub extern "C" fn clean_modifiers() {
 }
 
 #[no_mangle]
-pub extern "C" fn propagate_modifiers(pixel_precision: bool) -> *mut u8 {
+pub extern "C" fn propagate_modifiers(pixel_precision: bool, propagate: bool) -> *mut u8 {
     let bytes = mem::bytes();
 
-    let entries: Vec<_> = bytes
+    let mut entries: Vec<_> = bytes
         .chunks(size_of::<<TransformEntry as SerializableResult>::BytesType>())
         .map(|data| TransformEntry::try_from(data).unwrap())
         .collect();
+
+    for entry in entries.iter_mut() {
+        entry.propagate = propagate;
+    }
 
     with_state!(state, {
         let result = shapes::propagate_modifiers(state, &entries, pixel_precision);

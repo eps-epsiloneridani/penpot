@@ -1072,7 +1072,7 @@
 (defn- set-objects-async
   "Asynchronously process shapes in chunks, yielding to the browser between chunks.
    Returns a promise that resolves when all shapes are processed.
-   
+
    Renders a preview only periodically during loading to show progress,
    then does a full tile-based render at the end."
   [shapes render-callback]
@@ -1230,7 +1230,7 @@
       (h/call wasm/internal-module "_set_structure_modifiers"))))
 
 (defn propagate-modifiers
-  [entries pixel-precision]
+  [entries pixel-precision propagate?]
   (when-not ^boolean (empty? entries)
     (let [heapf32 (mem/get-heap-f32)
           heapu32 (mem/get-heap-u32)
@@ -1244,7 +1244,7 @@
               offset
               entries)
 
-      (let [offset     (-> (h/call wasm/internal-module "_propagate_modifiers" pixel-precision)
+      (let [offset     (-> (h/call wasm/internal-module "_propagate_modifiers" pixel-precision propagate?)
                            (mem/->offset-32))
             length     (aget heapu32 offset)
             max-offset (+ offset 1 (* length MODIFIER-U32-SIZE))
