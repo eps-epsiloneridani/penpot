@@ -29,6 +29,8 @@ export PENPOT_FLAGS="\
        enable-user-feedback \
        disable-secure-session-cookies \
        enable-smtp \
+       enable-cors \
+       disable-secure-session-cookies \
        enable-prepl-server \
        enable-urepl-server \
        enable-rpc-climit \
