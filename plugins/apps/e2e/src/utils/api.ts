@@ -1,23 +1,25 @@
 import { FileRpc } from '../models/file-rpc.model';
 
-const apiUrl = 'http://localhost:3449';
+const apiUrl = 'https://localhost:3449';
 
 export async function PenpotApi() {
   if (!process.env['E2E_LOGIN_EMAIL']) {
     throw new Error('E2E_LOGIN_EMAIL not set');
   }
 
+  const body = JSON.stringify({
+    'email': process.env['E2E_LOGIN_EMAIL'],
+    'password': process.env['E2E_LOGIN_PASSWORD'],
+  });
+
   const resultLoginRequest = await fetch(
-    `${apiUrl}/api/rpc/command/login-with-password`,
+    `${apiUrl}/api/main/methods/login-with-password`,
     {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/transit+json',
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        '~:email': process.env['E2E_LOGIN_EMAIL'],
-        '~:password': process.env['E2E_LOGIN_PASSWORD'],
-      }),
+      body: body
     },
   );
 
@@ -35,7 +37,7 @@ export async function PenpotApi() {
     getAuth: () => authToken,
     createFile: async () => {
       const createFileRequest = await fetch(
-        `${apiUrl}/api/rpc/command/create-file`,
+        `${apiUrl}/api/main/methods/create-file`,
         {
           method: 'POST',
           headers: {
@@ -65,7 +67,7 @@ export async function PenpotApi() {
     },
     deleteFile: async (fileId: string) => {
       const deleteFileRequest = await fetch(
-        `${apiUrl}/api/rpc/command/delete-file`,
+        `${apiUrl}/api/main/methods/delete-file`,
         {
           method: 'POST',
           headers: {
