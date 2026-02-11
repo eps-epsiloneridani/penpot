@@ -17,6 +17,7 @@
 
 (mf/defc text-edition-outline
   [{:keys [shape zoom modifiers]}]
+  (println "text-edition-outline" (features/active-feature? @st/state "render-wasm/v1"))
   (if (features/active-feature? @st/state "render-wasm/v1")
     (let [{:keys [width height]} (wasm.api/get-text-dimensions (:id shape))
           selrect-transform (mf/deref refs/workspace-selrect)
